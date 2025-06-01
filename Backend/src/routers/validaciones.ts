@@ -27,3 +27,15 @@ export const validacionRegister = z.object({
     .url({ message: 'El logo de perfil debe ser una URL válida' })
     .optional()
 })
+
+export const validacionLogin = z.object({
+  email: z
+    .string()
+    .min(5, { message: 'El email debe tener al menos 5 caracteres' })
+    .max(50, { message: 'El email no debe superar los 50 caracteres' })
+    .email({ message: 'El email no es válido' }),
+  password: z
+    .string()
+    .min(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+    .max(36, { message: 'La contraseña no debe superar los 36 caracteres' })
+})
