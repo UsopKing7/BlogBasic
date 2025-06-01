@@ -15,5 +15,15 @@ export interface UsuarioConsulta extends QueryResultRow {
   username: string
   email: string
   password: string
-  perfil_logo: string | null
+  perfil_logo: string
 }
+
+// interface para validacion de datos para insert en usuarios
+export interface NewUsuarioInterface {
+  username: string 
+  email: string 
+  password: string 
+  perfil_logo?: string 
+}
+
+export const SAL = Number(process.env.SAL) || 10
