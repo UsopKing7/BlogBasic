@@ -27,3 +27,9 @@ export interface NewUsuarioInterface {
 }
 
 export const SAL = Number(process.env.SAL) || 10
+
+// interface para Login 
+export interface Login {
+  email: string
+  password: string
+}
