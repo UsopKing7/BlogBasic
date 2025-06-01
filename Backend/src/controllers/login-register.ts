@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { pool } from '../models/db'
-import { NewUsuarioInterface, SAL } from '../config'
-import { validacionRegister } from '../routers/validaciones'
+import { Login, NewUsuarioInterface, SAL, UsuarioConsulta } from '../config'
+import { validacionRegister, validacionLogin } from '../routers/validaciones'
 import bcrypt from 'bcrypt'
 
 export const routerLoginRegister = Router()
@@ -31,3 +31,35 @@ routerLoginRegister.post('/register', async (req: Request, res: Response) => {
     })
   }
 })
+
+routerLoginRegister.post('/login', async (req, res) => {
+  try {
+    const vLogin: Login = validacionLogin.parse(req.body)
+
+    const { rows: user } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios WHERE email = $1', [vLogin.email]
+    )
+
+    if (user.length === 0) {
+      res.status(404).json({ message: 'no existe una cuenta asociado a este email' })
+      return
+    }
+
+    const passwordUser = await bcrypt.compare(vLogin.password, user[0].password)
+
+    if (!passwordUser) {
+      res.status(404).json({ message: 'El email o la contraseña son incorectas' })
+      return
+    }
+
+    res.status(200).json({
+      message: 'Login exitoso'
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error interno en el servidor',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
+
