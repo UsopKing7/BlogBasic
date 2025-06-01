@@ -3,3 +3,5 @@ Backend/build
 Backend/.env
 .env
 web
+localhost.session.sql
+.vscode
