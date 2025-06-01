@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { pool } from '../models/db'
-import { Login, NewUsuarioInterface, SAL, UsuarioConsulta } from '../config'
-import { validacionRegister, validacionLogin } from '../routers/validaciones'
+import { Login, NewUsuarioInterface, SAL, UsuarioConsulta, RecuperaraCuenta } from '../config'
+import { validacionRegister, validacionLogin, validacionRecuperar } from '../routers/validaciones'
 import bcrypt from 'bcrypt'
 
 export const routerLoginRegister = Router()
@@ -63,3 +63,42 @@ routerLoginRegister.post('/login', async (req, res) => {
   }
 })
 
+// endpoind para cambiar la contraseña del user
+routerLoginRegister.post('/recuperar', async (req, res) => {
+  try {
+    const vRecuperar: RecuperaraCuenta = validacionRecuperar.parse(req.body)
+    const hashPassword = await bcrypt.hash(vRecuperar.password, SAL)
+
+    const { rows: userRecuperar } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios WHERE username = $1 AND email = $2',
+      [
+        vRecuperar.username,
+        vRecuperar.email
+      ]
+    )
+
+    if (userRecuperar.length === 0) {
+      res.status(404).json({ message: 'Error no se econtro el usuario '})
+      return
+    }
+
+    await pool.query(
+      'UPDATE usuarios SET password = $1 WHERE username = $2 AND email = $3',
+      [
+        hashPassword,
+        vRecuperar.username,
+        vRecuperar.email
+      ]
+    )
+
+    res.status(200).json({
+      message: 'Se actualizo correctamente la contraseña'
+    })
+  } catch (error) {
+    console.log(error)   
+    res.status(500).json({
+      message: 'Error interno en el servidor',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
