@@ -21,14 +21,7 @@ export const validacionRegister = z.object({
   password: z
     .string()
     .min(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
-    .max(32, { message: 'La contraseña no debe superar los 32 caracteres' })
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-=\[\]{};':"\\|,.<>\/?]).+$/,
-      {
-        message:
-          'La contraseña debe contener mayúsculas, minúsculas, números y un carácter especial'
-      }
-    ),
+    .max(36, { message: 'La contraseña no debe superar los 36 caracteres' }),
   perfil_logo: z
     .string()
     .url({ message: 'El logo de perfil debe ser una URL válida' })
