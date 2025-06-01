@@ -12,7 +12,7 @@ routerLoginRegister.post('/register', async (req: Request, res: Response) => {
     const passwordHash = await bcrypt.hash(vRegister.password, SAL)
 
     await pool.query(
-      'INSERT INTO usuarios (username, email, password, perfil_logo) VALUES ($1, $2, $3, $4)', 
+      'INSERT INTO usuarios (username, email, password, perfil_logo) VALUES ($1, $2, $3, $4)',
       [
         vRegister.username,
         vRegister.email,
@@ -25,10 +25,9 @@ routerLoginRegister.post('/register', async (req: Request, res: Response) => {
       message: 'Se creo correctamente el usuario'
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       message: 'Error al registar',
       error: error instanceof Error ? error.message : error
     })
   }
-}) 
+})
