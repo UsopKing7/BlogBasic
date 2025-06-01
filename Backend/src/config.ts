@@ -33,3 +33,10 @@ export interface Login {
   email: string
   password: string
 }
+
+// interface para Recuperar cuenta
+export interface RecuperaraCuenta {
+  username: string
+  email: string
+  password: string
+}
