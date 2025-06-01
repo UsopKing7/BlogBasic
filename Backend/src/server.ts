@@ -1,9 +1,10 @@
 import express from 'express'
+import { PORT } from './config'
 
 const app = express()
 
-app.get('/', (_req, res) => {
-  res.send('hola mundo')
+app.listen(PORT.Port, () => {
+  console.table({
+    URL: `http://localhost:${PORT.Port}`
+  })
 })
-
-app.listen(3333)
