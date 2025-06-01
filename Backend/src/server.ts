@@ -3,6 +3,7 @@ import { PORT } from './config'
 import { midelware } from './routers/midelware'
 
 const app = express()
+app.use(express.json())
 
 app.use(midelware)
 
