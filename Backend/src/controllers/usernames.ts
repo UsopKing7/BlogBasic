@@ -94,3 +94,34 @@ routerUsername.patch('/usuario/update/:id', async (req, res) => {
     })
   }
 })
+
+routerUsername.delete('/usuario/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const { rows: usuarioExiste } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios WHERE id = $1', [id]
+    )
+
+    if (usuarioExiste.length === 0) {
+      res.status(404).json({ message: 'No se econtro el usuario' })
+      return
+    }
+
+    await pool.query(
+      'DELETE FROM usuarios WHERE id = $1', [id]
+    )
+
+    res.status(200).json({
+      message: 'Se elimino correctamente el usuario',
+      username: usuarioExiste.map((user) => ({
+        username: user.username
+      }))
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error interno en el servidor',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
