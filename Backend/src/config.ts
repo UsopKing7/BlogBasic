@@ -16,6 +16,7 @@ export interface UsuarioConsulta extends QueryResultRow {
   email: string
   password: string
   perfil_logo: string
+  registrado_en: string
 }
 
 // interface para validacion de datos para insert en usuarios

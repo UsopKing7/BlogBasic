@@ -1,0 +1,63 @@
+import { Router } from 'express'
+import { pool } from '../models/db'
+import { UsuarioConsulta } from '../config'
+
+export const routerUsername = Router()
+
+routerUsername.get('/usuarios', async (_req, res) => {
+  try {
+    const { rows: usuarios } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios'
+    )
+
+    if (usuarios.length === 0) {
+      res.status(404).json({ message: 'No se encontro ningun usuario' })
+      return
+    }
+
+    res.status(200).json({
+      message: 'Usuarios encontrados',
+      data: usuarios.map((user) => ({
+        username: user.username,
+        email: user.email,
+        fechaRegistro: user.registrado_en
+      }))
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error interno de el servidor',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
+
+routerUsername.get('/usuario/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const { rows: usuario } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios WHERE id = $1', [id]
+    )
+
+    if (usuario.length === 0) {
+      res.status(404).json({ message: 'No se encontro el usuario' })
+      return
+    }
+
+    res.status(200).json({
+      message: 'Usuario encontrodo',
+      data: usuario.map((user) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        perfil_logo: user.perfil_logo,
+        registrado_en: user.registrado_en
+      }))
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error interno de el servidor',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
