@@ -41,3 +41,10 @@ export interface RecuperaraCuenta {
   email: string
   password: string
 }
+
+// interface para Update Usuario
+export interface UpdateUsuario {
+  username?: string
+  email?: string
+  perfil_logo?: string
+}
