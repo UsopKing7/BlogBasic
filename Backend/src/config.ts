@@ -19,6 +19,14 @@ export interface UsuarioConsulta extends QueryResultRow {
   registrado_en: string
 }
 
+// interface para Posts en consulta 
+export interface PostsConsulta extends QueryResultRow {
+  id: `${string}-${string}-${string}-${string}-${string}`
+  titulo: string
+  contenido: string
+  autor_id: `${string}-${string}-${string}-${string}-${string}`
+}
+
 // interface para validacion de datos para insert en usuarios
 export interface NewUsuarioInterface {
   username: string 
