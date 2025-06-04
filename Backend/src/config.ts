@@ -19,7 +19,7 @@ export interface UsuarioConsulta extends QueryResultRow {
   registrado_en: string
 }
 
-// interface para Posts en consulta 
+// interface para Posts en consulta
 export interface PostsConsulta extends QueryResultRow {
   id: `${string}-${string}-${string}-${string}-${string}`
   titulo: string
@@ -29,15 +29,15 @@ export interface PostsConsulta extends QueryResultRow {
 
 // interface para validacion de datos para insert en usuarios
 export interface NewUsuarioInterface {
-  username: string 
-  email: string 
-  password: string 
-  perfil_logo?: string 
+  username: string
+  email: string
+  password: string
+  perfil_logo?: string
 }
 
 export const SAL = Number(process.env.SAL) || 10
 
-// interface para Login 
+// interface para Login
 export interface Login {
   email: string
   password: string
@@ -55,4 +55,10 @@ export interface UpdateUsuario {
   username?: string
   email?: string
   perfil_logo?: string
+}
+
+// interface para Agregar Posts
+export interface AgregraPosts {
+  titulo?: string
+  contenido?: string
 }
