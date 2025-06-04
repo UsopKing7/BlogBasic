@@ -1,8 +1,9 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 import { pool } from '../models/db'
-import { Login, NewUsuarioInterface, SAL, UsuarioConsulta, RecuperaraCuenta } from '../config'
+import { Login, NewUsuarioInterface, SAL, UsuarioConsulta, RecuperaraCuenta, SECRET } from '../config'
 import { validacionRegister, validacionLogin, validacionRecuperar } from '../routers/validaciones'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const routerLoginRegister = Router()
 
@@ -51,6 +52,16 @@ routerLoginRegister.post('/login', async (req, res) => {
       res.status(404).json({ message: 'El email o la contraseña son incorectas' })
       return
     }
+
+    const payload = { id: user[0].id, usuario: user[0].username, email: user[0].email }
+    const token = jwt.sign(payload, SECRET, {expiresIn: '1h'})
+
+    res.cookie('access_token', token,  {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000 
+    })
 
     res.status(200).json({
       message: 'Login exitoso'
@@ -102,3 +113,27 @@ routerLoginRegister.post('/recuperar', async (req, res) => {
     })
   }
 })
+
+routerLoginRegister.post('/logout', (_req, res) => {
+  res.clearCookie('access_token')
+  res.status(200).json({ message: 'Session cerrada' })
+})
+
+export const rutaProtected = (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.cookies.access_token
+
+  if (!token) {
+    res.status(401).json({ message: 'Token no encontrado' })
+    return
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET)
+    res.status(200).json({ message: 'Acceso autorizado', usuario: decoded })
+    next()
+  } catch (error) {
+    res.status(500).json({
+      message: 'Token invalido o expirado'
+    })
+  }
+}

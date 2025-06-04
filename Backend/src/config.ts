@@ -62,3 +62,6 @@ export interface AgregraPosts {
   titulo?: string
   contenido?: string
 }
+
+// secret
+export const SECRET = String(process.env.SECRET)
