@@ -76,14 +76,25 @@ export const validacionUsuarioUpdate = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, {
       message:
         'El nombre de usuario solo puede contener letras, números y guiones bajos'
-    }).optional(),
+    })
+    .optional(),
   email: z
     .string()
     .min(5, { message: 'El email debe tener al menos 5 caracteres' })
     .max(50, { message: 'El email no debe superar los 50 caracteres' })
-    .email({ message: 'El email no es válido' }).optional(),
+    .email({ message: 'El email no es válido' })
+    .optional(),
   perfil_logo: z
     .string()
     .url({ message: 'El logo de perfil debe ser una URL válida' })
     .optional()
+})
+
+export const validacionPosts = z.object({
+  titulo: z
+    .string()
+    .min(3, { message: 'El nombre debe tener como minimo 3 caracteres' }),
+  contenido: z
+    .string()
+    .min(3, { message: 'El contenido tiene que ser mayor a 3 caracteres' })
 })
