@@ -1,11 +1,10 @@
+import { Route, Routes } from "react-router-dom";
+import { Inicio } from "./inicio/inicioHTML";
 
-function App() {
-
+export const App = () => {
   return (
-    <>
-      <h1>Hola</h1>
-    </>
-  );
+    <Routes>
+      <Route path="/" element={<Inicio />} />
+    </Routes>
+  )
 }
-
-export default App;
