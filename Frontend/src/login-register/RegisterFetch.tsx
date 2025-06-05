@@ -8,7 +8,7 @@ export const useRegister = () => {
   const [perfil_logo, setPerfilLogo] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const res = await fetch('http://localhost:3333/api/register', {
@@ -41,6 +41,6 @@ export const useRegister = () => {
     setPassword,
     perfil_logo,
     setPerfilLogo,
-    handleLogin
+    handleRegister
   }
 }
