@@ -1,18 +1,21 @@
-import { Navigate } from 'react-router-dom';
-import type { ReactNode } from 'react';
-
-const isAuthenticated = (): boolean => {
-  return document.cookie.includes('token=');
-};
+import { Navigate } from 'react-router-dom'
+import type { ReactNode } from 'react'
+import { useAuthStatus } from '../config'
 
 interface Props {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export default function ProtectedRoute({ children }: Props) {
-  if (!isAuthenticated()) {
-    return <Navigate to="/" replace />;
+  const { isLoading, isAuthenticated } = useAuthStatus()
+
+  if (isLoading) {
+    return <div>Cargando...</div> // O un spinner, lo que prefieras
   }
 
-  return <>{children}</>;
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
 }
