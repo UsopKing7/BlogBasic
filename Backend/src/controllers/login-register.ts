@@ -161,7 +161,7 @@ export const rutaProtected = (
 }
 
 // enpoind para check de token
-routerLoginRegister.get('/check-auth', rutaProtected, (req, res) => {
+routerLoginRegister.get('/check-auth',  (req, res) => {
   const token = req.cookies.access_token
 
   if (!token) res.sendStatus(401)
