@@ -18,6 +18,7 @@ import jwt from 'jsonwebtoken'
 
 export const routerLoginRegister = Router()
 
+// enpoind para registrar users
 routerLoginRegister.post('/register', async (req: Request, res: Response) => {
   try {
     const vRegister: NewUsuarioInterface = validacionRegister.parse(req.body)
@@ -44,6 +45,7 @@ routerLoginRegister.post('/register', async (req: Request, res: Response) => {
   }
 })
 
+// enpoind para logearte
 routerLoginRegister.post('/login', async (req, res) => {
   try {
     const vLogin: Login = validacionLogin.parse(req.body)
@@ -128,11 +130,13 @@ routerLoginRegister.post('/recuperar', async (req, res) => {
   }
 })
 
+// enpoind para hacer cierre de session
 routerLoginRegister.post('/logout', (_req, res) => {
   res.clearCookie('access_token')
   res.status(200).json({ message: 'Session cerrada' })
 })
 
+// enpoind para check de token
 routerLoginRegister.get('/check-auth', (req, res) => {
   const token = req.cookies.access_token
 
@@ -145,6 +149,8 @@ routerLoginRegister.get('/check-auth', (req, res) => {
     res.sendStatus(401)
   }
 })
+
+// endpoint para cubrir rutas protected
 export const rutaProtected = (
   req: Request,
   res: Response,
