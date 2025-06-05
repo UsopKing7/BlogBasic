@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { pool } from '../models/db'
 import { PostsConsulta, UsuarioConsulta } from '../config'
 import { validacionPosts } from '../routers/validaciones'
+import { rutaProtected } from './login-register'
 
 export const routerPosts = Router()
 
@@ -28,7 +29,7 @@ routerPosts.get('/posts', async (_req, res) => {
   }
 })
 
-routerPosts.post('/usuario/agregar/post/:id', async (req, res) => {
+routerPosts.post('/usuario/agregar/post/:id', rutaProtected, async (req, res) => {
   try {
     const { id } = req.params
     const vPosts = validacionPosts.parse(req.body)
@@ -60,7 +61,7 @@ routerPosts.post('/usuario/agregar/post/:id', async (req, res) => {
   }
 })
 
-routerPosts.delete('/usuario/eliminar/post/:id', async (req, res) => {
+routerPosts.delete('/usuario/eliminar/post/:id', rutaProtected, async (req, res) => {
   try {
     const { id } = req.params
 

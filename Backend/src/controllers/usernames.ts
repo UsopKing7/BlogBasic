@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { pool } from '../models/db'
 import { UsuarioConsulta, UpdateUsuario } from '../config'
 import { validacionUsuarioUpdate } from '../routers/validaciones'
+import { rutaProtected } from './login-register'
 
 export const routerUsername = Router()
 
@@ -33,7 +34,7 @@ routerUsername.get('/usuarios', async (_req, res) => {
   }
 })
 
-routerUsername.get('/usuario/:id', async (req, res) => {
+routerUsername.get('/usuario/:id', rutaProtected, async (req, res) => {
   try {
     const { id } = req.params
 
@@ -64,7 +65,7 @@ routerUsername.get('/usuario/:id', async (req, res) => {
   }
 })
 
-routerUsername.patch('/usuario/update/:id', async (req, res) => {
+routerUsername.patch('/usuario/update/:id', rutaProtected, async (req, res) => {
   try {
     const { id } = req.params
 
@@ -95,7 +96,7 @@ routerUsername.patch('/usuario/update/:id', async (req, res) => {
   }
 })
 
-routerUsername.delete('/usuario/delete/:id', async (req, res) => {
+routerUsername.delete('/usuario/delete/:id', rutaProtected, async (req, res) => {
   try {
     const { id } = req.params
 
