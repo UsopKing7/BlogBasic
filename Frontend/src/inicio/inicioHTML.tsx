@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { FaUser, FaSignInAlt, FaUserPlus, FaCode } from 'react-icons/fa'
-import '../styles/inicio.css'
 
 export const Inicio = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<{ id: number, usuario: string, email: string } | null>(null)
+  const [user, setUser] = useState<{
+    id: number
+    usuario: string
+    email: string
+    perfil_logo: string
+  } | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -32,27 +36,29 @@ export const Inicio = () => {
   }, [])
 
   return (
-    <nav className="navbar" role="navigation" aria-label="Menú principal">
-      <div className="navbar-container">
-        <div className="navbar-logo">
-          <FaCode className="logo-icon" />
-          <span className="logo-text"><a href=""></a></span>
+    <nav role="navigation" aria-label="Menú principal">
+      <div>
+        <div>
+          <FaCode />
+          <span>
+            <a href=""></a>
+          </span>
         </div>
-        <div className="navbar-buttons">
+        <div>
           {isAuthenticated ? (
-            <Link to="/perfil" className="nav-btn profile-btn" aria-label="Ir a perfil">
-              <FaUser className="btn-icon" />
-              <span className="btn-text">{user?.usuario || 'Perfil'}</span>
+            <Link to="/perfil" aria-label="Ir a perfil">
+              {user?.perfil_logo ? <img src={user.perfil_logo} /> : <FaUser />}
+              <span>{user?.usuario}</span>
             </Link>
           ) : (
             <>
-              <Link to="/login" className="nav-btn login-btn" aria-label="Iniciar sesión">
-                <FaSignInAlt className="btn-icon" />
-                <span className="btn-text">Iniciar sesión</span>
+              <Link to="/login" aria-label="Iniciar sesión">
+                <FaSignInAlt />
+                <span>Iniciar sesión</span>
               </Link>
-              <Link to="/register" className="nav-btn register-btn" aria-label="Registrarse">
-                <FaUserPlus className="btn-icon" />
-                <span className="btn-text">Registrarse</span>
+              <Link to="/register" aria-label="Registrarse">
+                <FaUserPlus />
+                <span>Registrarse</span>
               </Link>
             </>
           )}

@@ -7,17 +7,17 @@ export const Login = () => {
   const { volver } = useVolver()
   return (
     <>
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
+      <div>
+        <div>
+          <div>
             <h2>Registrate</h2>
             <p>Ingrese sus datos</p>
           </div>
 
           <form onSubmit={handleLogin}>
-            <div className="input-group">
+            <div>
               <label htmlFor="email">
-                <FaEnvelope className="input-icon" />
+                <FaEnvelope />
                 <span>Correo Electrónico</span>
               </label>
               <input
@@ -30,9 +30,9 @@ export const Login = () => {
               />
             </div>
 
-            <div className="input-group">
+            <div>
               <label htmlFor="password">
-                <FaLock className="input-icon" />
+                <FaLock />
                 <span>Contraseña</span>
               </label>
               <input
@@ -44,10 +44,10 @@ export const Login = () => {
                 required
               />
             </div>
-            <button type="submit" className="submit-btn">
-              <FaArrowRight className="arrow-icon" />
+            <button type="submit">
+              <FaArrowRight /> iniciar session
             </button>
-            <button onClick={volver} className="submit-btn">
+            <button onClick={volver}>
               Canselar
             </button>
           </form>
