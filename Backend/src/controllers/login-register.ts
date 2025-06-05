@@ -1,7 +1,18 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { pool } from '../models/db'
-import { Login, NewUsuarioInterface, SAL, UsuarioConsulta, RecuperaraCuenta, SECRET } from '../config'
-import { validacionRegister, validacionLogin, validacionRecuperar } from '../routers/validaciones'
+import {
+  Login,
+  NewUsuarioInterface,
+  SAL,
+  UsuarioConsulta,
+  RecuperaraCuenta,
+  SECRET
+} from '../config'
+import {
+  validacionRegister,
+  validacionLogin,
+  validacionRecuperar
+} from '../routers/validaciones'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -38,29 +49,38 @@ routerLoginRegister.post('/login', async (req, res) => {
     const vLogin: Login = validacionLogin.parse(req.body)
 
     const { rows: user } = await pool.query<UsuarioConsulta>(
-      'SELECT * FROM usuarios WHERE email = $1', [vLogin.email]
+      'SELECT * FROM usuarios WHERE email = $1',
+      [vLogin.email]
     )
 
     if (user.length === 0) {
-      res.status(404).json({ message: 'no existe una cuenta asociado a este email' })
+      res
+        .status(404)
+        .json({ message: 'no existe una cuenta asociado a este email' })
       return
     }
 
     const passwordUser = await bcrypt.compare(vLogin.password, user[0].password)
 
     if (!passwordUser) {
-      res.status(404).json({ message: 'El email o la contraseña son incorectas' })
+      res
+        .status(404)
+        .json({ message: 'El email o la contraseña son incorectas' })
       return
     }
 
-    const payload = { id: user[0].id, usuario: user[0].username, email: user[0].email }
-    const token = jwt.sign(payload, SECRET, {expiresIn: '1h'})
+    const payload = {
+      id: user[0].id,
+      usuario: user[0].username,
+      email: user[0].email
+    }
+    const token = jwt.sign(payload, SECRET, { expiresIn: '1h' })
 
-    res.cookie('access_token', token,  {
+    res.cookie('access_token', token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      maxAge: 60 * 60 * 1000 
+      maxAge: 60 * 60 * 1000
     })
 
     res.status(200).json({
@@ -82,31 +102,24 @@ routerLoginRegister.post('/recuperar', async (req, res) => {
 
     const { rows: userRecuperar } = await pool.query<UsuarioConsulta>(
       'SELECT * FROM usuarios WHERE username = $1 AND email = $2',
-      [
-        vRecuperar.username,
-        vRecuperar.email
-      ]
+      [vRecuperar.username, vRecuperar.email]
     )
 
     if (userRecuperar.length === 0) {
-      res.status(404).json({ message: 'Error no se econtro el usuario '})
+      res.status(404).json({ message: 'Error no se econtro el usuario ' })
       return
     }
 
     await pool.query(
       'UPDATE usuarios SET password = $1 WHERE username = $2 AND email = $3',
-      [
-        hashPassword,
-        vRecuperar.username,
-        vRecuperar.email
-      ]
+      [hashPassword, vRecuperar.username, vRecuperar.email]
     )
 
     res.status(200).json({
       message: 'Se actualizo correctamente la contraseña'
     })
   } catch (error) {
-    console.log(error)   
+    console.log(error)
     res.status(500).json({
       message: 'Error interno en el servidor',
       error: error instanceof Error ? error.message : error
@@ -119,7 +132,23 @@ routerLoginRegister.post('/logout', (_req, res) => {
   res.status(200).json({ message: 'Session cerrada' })
 })
 
-export const rutaProtected = (req: Request, res: Response, next: NextFunction): void => {
+routerLoginRegister.get('/check-auth', (req, res) => {
+  const token = req.cookies.access_token
+
+  if (!token) res.sendStatus(401)
+
+  try {
+    const decoded = jwt.verify(token, SECRET)
+    res.status(200).json({ user: decoded })
+  } catch (err) {
+    res.sendStatus(401)
+  }
+})
+export const rutaProtected = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const token = req.cookies.access_token
 
   if (!token) {
