@@ -10,3 +10,20 @@ export const useVolver = () => {
 
   return { volver }
 }
+
+export const useCerrar = () => {
+  const navigate = useNavigate()
+
+  const cerraSession = async () => {
+    const res = await fetch('http://localhost:3333/api/logout', {
+      method: 'POST',
+      credentials: 'include'
+    })
+  
+    if (res.ok) {
+      alert('Cierre de session exitoso') 
+      navigate('/')
+    }
+  }
+  return { cerraSession }
+}
