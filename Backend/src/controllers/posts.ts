@@ -8,8 +8,19 @@ export const routerPosts = Router()
 
 routerPosts.get('/posts', async (_req, res) => {
   try {
-    const { rows: posts } = await pool.query<PostsConsulta>(
-      'SELECT * FROM posts'
+    const { rows: posts } = await pool.query(
+      `
+      SELECT 
+        posts.id,
+        posts.titulo,
+        posts.contenido,
+        posts.creado_en,
+        usuarios.username AS username,
+        usuarios.perfil_logo AS perfil_logo
+      FROM posts
+      INNER JOIN usuarios ON posts.autor_id = usuarios.id
+      ORDER BY posts.creado_en DESC
+      `
     )
 
     if (posts.length === 0) {
