@@ -136,20 +136,6 @@ routerLoginRegister.post('/logout', (_req, res) => {
   res.status(200).json({ message: 'Session cerrada' })
 })
 
-// enpoind para check de token
-routerLoginRegister.get('/check-auth', (req, res) => {
-  const token = req.cookies.access_token
-
-  if (!token) res.sendStatus(401)
-
-  try {
-    const decoded = jwt.verify(token, SECRET)
-    res.status(200).json({ user: decoded })
-  } catch (err) {
-    res.sendStatus(401)
-  }
-})
-
 // endpoint para cubrir rutas protected
 export const rutaProtected = (
   req: Request,
@@ -173,3 +159,18 @@ export const rutaProtected = (
     })
   }
 }
+
+// enpoind para check de token
+routerLoginRegister.get('/check-auth', rutaProtected, (req, res) => {
+  const token = req.cookies.access_token
+
+  if (!token) res.sendStatus(401)
+
+  try {
+    const decoded = jwt.verify(token, SECRET)
+    res.status(200).json({ user: decoded })
+  } catch (err) {
+    res.sendStatus(401)
+  }
+})
+
