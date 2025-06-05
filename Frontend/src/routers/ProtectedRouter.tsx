@@ -1,8 +1,6 @@
-// src/components/ProtectedRoute.tsx
 import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
-// Simulador de autenticación (mejor usar context o estado global real)
 const isAuthenticated = (): boolean => {
   return document.cookie.includes('token=');
 };
