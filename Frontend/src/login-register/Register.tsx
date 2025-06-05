@@ -1,12 +1,7 @@
 import { useRegister } from './RegisterFetch'
-import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-  FaImage,
-  /*  FaArrowRight */
-} from 'react-icons/fa'
+import { FaUser, FaEnvelope, FaLock, FaImage } from 'react-icons/fa'
 import { useVolver } from '../config'
+import '../styles/register.css' // Archivo CSS separado
 
 export const Register = () => {
   const {
@@ -23,17 +18,17 @@ export const Register = () => {
   const { volver } = useVolver()
 
   return (
-    <div>
-      <div>
-        <div>
-          <h2>Registrate</h2>
-          <p>Ingrese sus datos</p>
+    <div className="register-container">
+      <div className="register-card">
+        <div className="register-header">
+          <h2>Regístrate</h2>
+          <p>Ingrese sus datos para crear una cuenta</p>
         </div>
 
-        <form onSubmit={handleRegister}>
-          <div>
+        <form className="register-form" onSubmit={handleRegister}>
+          <div className="form-group">
             <label htmlFor="username">
-              <FaUser />
+              <FaUser className="form-icon" />
               <span>Nombre de Usuario</span>
             </label>
             <input
@@ -46,9 +41,9 @@ export const Register = () => {
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="email">
-              <FaEnvelope />
+              <FaEnvelope className="form-icon" />
               <span>Correo Electrónico</span>
             </label>
             <input
@@ -61,9 +56,9 @@ export const Register = () => {
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="password">
-              <FaLock />
+              <FaLock className="form-icon" />
               <span>Contraseña</span>
             </label>
             <input
@@ -76,9 +71,9 @@ export const Register = () => {
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="img-perfil">
-              <FaImage />
+              <FaImage className="form-icon" />
               <span>Foto de Perfil (URL)</span>
             </label>
             <input
@@ -91,18 +86,20 @@ export const Register = () => {
           </div>
 
           {perfil_logo && (
-            <div>
-              <img
-                src={perfil_logo}
-                alt="Vista previa de imagen de perfil"
-                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-              />
+            <div className="image-preview">
+              <img src={perfil_logo} alt="Vista previa de imagen de perfil" />
               <span>Vista previa</span>
             </div>
           )}
 
-          <button type="submit" >Registrarme</button>
-          <button onClick={volver}>Canselar</button>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">
+              Registrarme
+            </button>
+            <button type="button" onClick={volver} className="btn-secondary">
+              Cancelar
+            </button>
+          </div>
         </form>
       </div>
     </div>
