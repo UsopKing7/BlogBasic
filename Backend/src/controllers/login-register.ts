@@ -72,7 +72,8 @@ routerLoginRegister.post('/login', async (req, res) => {
     const payload = {
       id: user[0].id,
       usuario: user[0].username,
-      email: user[0].email
+      email: user[0].email,
+      perfil_logo: user[0].perfil_logo
     }
     const token = jwt.sign(payload, SECRET, { expiresIn: '1h' })
 
