@@ -10,6 +10,7 @@ import {
   FaRegComment
 } from 'react-icons/fa'
 import { usePostsMostrar } from './inicioFetch'
+import { formatearFecha } from '../../config'
 import '../styles/Inicio.css'
 
 export const Inicio = () => {
@@ -52,24 +53,6 @@ export const Inicio = () => {
       post.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.contenido.toLowerCase().includes(searchQuery.toLowerCase())
   )
-
-  const formatearFecha = (fechaIso: string): string => {
-    if (!fechaIso) return 'Sin fecha definida'
-
-    try {
-      const fecha = new Date(fechaIso)
-      return fecha.toLocaleString('es-ES', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      })
-    } catch {
-      return 'Fecha inválida'
-    }
-  }
 
   return (
     <div className="inicio-app">
