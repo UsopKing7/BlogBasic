@@ -21,7 +21,7 @@ export const useCerrar = () => {
     })
   
     if (res.ok) {
-      alert('Cierre de session exitoso') 
+      alert('Cierre de session exitoso')
       navigate('/')
     }
   }
