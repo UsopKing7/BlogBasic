@@ -6,7 +6,8 @@ import {
   SAL,
   UsuarioConsulta,
   RecuperaraCuenta,
-  SECRET
+  SECRET,
+  UsuarioToken
 } from '../config'
 import {
   validacionRegister,
@@ -151,7 +152,7 @@ export const rutaProtected = (
 
   try {
     const decoded = jwt.verify(token, SECRET)
-    res.status(200).json({ message: 'Acceso autorizado', usuario: decoded })
+    req.user = decoded as UsuarioToken
     next()
   } catch (error) {
     res.status(500).json({
@@ -161,7 +162,7 @@ export const rutaProtected = (
 }
 
 // enpoind para check de token
-routerLoginRegister.get('/check-auth',  (req, res) => {
+routerLoginRegister.get('/check-auth', (req, res) => {
   const token = req.cookies.access_token
 
   if (!token) res.sendStatus(401)
@@ -173,4 +174,3 @@ routerLoginRegister.get('/check-auth',  (req, res) => {
     res.sendStatus(401)
   }
 })
-

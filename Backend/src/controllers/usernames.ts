@@ -49,13 +49,8 @@ routerUsername.get('/usuario/:id', rutaProtected, async (req, res) => {
 
     res.status(200).json({
       message: 'Usuario encontrodo',
-      data: usuario.map((user) => ({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        perfil_logo: user.perfil_logo,
-        registrado_en: user.registrado_en
-      }))
+      data: usuario[0],
+      username: req.user
     })
   } catch (error) {
     res.status(500).json({

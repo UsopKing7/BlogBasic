@@ -65,3 +65,19 @@ export interface AgregraPosts {
 
 // secret
 export const SECRET = String(process.env.SECRET)
+
+export interface UsuarioToken {
+  email: string
+  username: string
+  id: string
+  iat: number
+  exp: number
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: UsuarioToken
+    }
+  }
+}
