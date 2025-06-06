@@ -53,6 +53,24 @@ export const Inicio = () => {
       post.contenido.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+   const formatearFecha = (fechaIso: string): string => {
+    if (!fechaIso) return 'Sin fecha definida'
+    
+    try {
+      const fecha = new Date(fechaIso)
+      return fecha.toLocaleString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      })
+    } catch {
+      return 'Fecha inválida'
+    }
+  }
+
   return (
     <div className="inicio-app">
       {/* Header */}
@@ -146,7 +164,7 @@ export const Inicio = () => {
                           <h4 className="author-name">
                             {post.username || 'Anónimo'}
                           </h4>
-                          <span className="post-date">{post.creado_en}</span>
+                          <span className="post-date">{formatearFecha(post.creado_en)}</span>
                         </div>
                       </div>
                     </div>
