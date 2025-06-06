@@ -53,9 +53,9 @@ export const Inicio = () => {
       post.contenido.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-   const formatearFecha = (fechaIso: string): string => {
+  const formatearFecha = (fechaIso: string): string => {
     if (!fechaIso) return 'Sin fecha definida'
-    
+
     try {
       const fecha = new Date(fechaIso)
       return fecha.toLocaleString('es-ES', {
@@ -153,9 +153,7 @@ export const Inicio = () => {
                       <div className="author-info">
                         <div className="author-avatar">
                           {post.perfil_logo ? (
-                            <img
-                              src={post.perfil_logo}
-                            />
+                            <img src={post.perfil_logo} />
                           ) : (
                             <FaUser />
                           )}
@@ -164,7 +162,9 @@ export const Inicio = () => {
                           <h4 className="author-name">
                             {post.username || 'Anónimo'}
                           </h4>
-                          <span className="post-date">{formatearFecha(post.creado_en)}</span>
+                          <span className="post-date">
+                            {formatearFecha(post.creado_en)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -174,22 +174,24 @@ export const Inicio = () => {
                       <p className="post-text">{post.contenido}</p>
                     </div>
 
-                    <div className="post-footer">
-                      <button
-                        className="action-btn like-btn"
-                        aria-label="Dar like"
-                      >
-                        <FaHeart />
-                        <span>Like</span>
-                      </button>
-                      <button
-                        className="action-btn comment-btn"
-                        aria-label="Comentar"
-                      >
-                        <FaRegComment />
-                        <span>Comentar</span>
-                      </button>
-                    </div>
+                    {isAuthenticated && (
+                      <div className="post-footer">
+                        <button
+                          className="action-btn like-btn"
+                          aria-label="Dar like"
+                        >
+                          <FaHeart />
+                          <span>Like</span>
+                        </button>
+                        <button
+                          className="action-btn comment-btn"
+                          aria-label="Comentar"
+                        >
+                          <FaRegComment />
+                          <span>Comentar</span>
+                        </button>
+                      </div>
+                    )}
                   </article>
                 ))}
               </div>
@@ -203,7 +205,10 @@ export const Inicio = () => {
                     : 'Aún no hay publicaciones. Sé el primero en compartir algo.'}
                 </p>
                 {isAuthenticated && (
-                  <Link to={`/new-post/${user?.id}`} className="create-post-btn">
+                  <Link
+                    to={`/new-post/${user?.id}`}
+                    className="create-post-btn"
+                  >
                     Crear mi primer post
                   </Link>
                 )}
