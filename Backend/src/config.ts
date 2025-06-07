@@ -81,3 +81,10 @@ declare global {
     }
   }
 }
+
+// interface para consulata de Likes
+export interface LikesConsulta {
+  usuario_id: string
+  post_id: string
+  total_likes: number
+}
