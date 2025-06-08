@@ -174,3 +174,10 @@ routerLoginRegister.get('/check-auth', (req, res) => {
     res.sendStatus(401)
   }
 })
+
+//enpoind para mandar el id
+routerLoginRegister.get('/id', rutaProtected, async (req, res) => {
+  const user = req.user as UsuarioToken
+  const { id, email, username } = user
+  res.status(200).json({ id, email, username })
+})
