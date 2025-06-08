@@ -9,7 +9,8 @@ import { CrearPost } from './posts/PostsNew'
 export const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Inicio />} />
+      <Route path='/' element={<Inicio />} />
+      <Route path="/:id" element={<Inicio />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route
