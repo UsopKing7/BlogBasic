@@ -21,7 +21,7 @@ export const Inicio = () => {
     email: string
     perfil_logo: string
   } | null>(null)
-  const { posts } = usePostsMostrar()
+  const { posts, likesPorPost, hadnleDarLike } = usePostsMostrar()
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
@@ -156,16 +156,17 @@ export const Inicio = () => {
                       <h3 className="post-title">{post.titulo}</h3>
                       <p className="post-text">{post.contenido}</p>
                     </div>
-
                     {isAuthenticated && (
                       <div className="post-footer">
                         <button
                           className="action-btn like-btn"
                           aria-label="Dar like"
+                          onClick={() => hadnleDarLike(post.id)}
                         >
                           <FaHeart />
-                          <span>Like</span>
+                          <span>{likesPorPost[post.id] ?? 0}</span>
                         </button>
+
                         <button
                           className="action-btn comment-btn"
                           aria-label="Comentar"
