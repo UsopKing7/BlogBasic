@@ -19,8 +19,14 @@ export const useLogin = () => {
     })
 
     if (res.ok) {
-      alert('Inicio de sesión exitoso')
-      navigate('/')
+      const idRes = await fetch(`http://localhost:3333/api/id`, {
+        credentials: 'include'
+      })
+      const data = await idRes.json()
+      
+      if (data.id) {
+        navigate(`/${data.id}`)
+      }
     } else {
       alert('Error al iniciar sesión')
     }
