@@ -1,4 +1,5 @@
-# BLOG BASICO
+# BLOG BASICO 
+## (en proceso)
 realice una app web como FullStack develover
 Es un Blog basico donde puedes realizar CRUD (GET, POST, UPDATE, DELETE)
 
