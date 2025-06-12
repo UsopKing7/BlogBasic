@@ -196,6 +196,7 @@
   font-weight: 600;
   color: var(--color-primary);
   font-size: 0.95rem;
+  text-decoration: none;
 }
 
 .post-title {
