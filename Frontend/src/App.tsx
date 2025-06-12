@@ -6,6 +6,7 @@ import ProtectedRoute from './routers/ProtectedRouter'
 import { Perfil } from './perfil/Perfil'
 import { CrearPost } from './posts/PostsNew'
 import { UpdatePerfil } from './perfil/UpdatePerfil'
+import { UpdatePost } from './perfil/ActualizarPost'
 
 export const App = () => {
   return (
@@ -35,6 +36,14 @@ export const App = () => {
         element={
           <ProtectedRoute>
             <UpdatePerfil />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/perfil/update/post/:id"
+        element={
+          <ProtectedRoute>
+            <UpdatePost />
           </ProtectedRoute>
         }
       />

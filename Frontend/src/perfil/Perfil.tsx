@@ -19,7 +19,6 @@ export const Perfil = () => {
   return (
     <div className="perfil-wrap">
       <div className="perfil-grid">
-        {/* Tarjeta de usuario */}
         <div className="usuario-card">
           <img
             className="usuario-avatar"
@@ -55,7 +54,6 @@ export const Perfil = () => {
           </div>
         </div>
 
-        {/* Contenido principal */}
         <div className="posts-container">
           <div className="section-header">
             <h2 className="section-title">Mis Publicaciones</h2>
@@ -74,6 +72,7 @@ export const Perfil = () => {
                       alt={post.username}
                       className="post-avatar"
                     />
+                    <Link to={`/perfil/update/post/${post.id}`} className='brand-wrapper'><span className='post-author'>Editar Post</span></Link>
                     <span className="post-author">{post.username}</span>
                   </div>
                   <h3 className="post-title">{post.titulo}</h3>
