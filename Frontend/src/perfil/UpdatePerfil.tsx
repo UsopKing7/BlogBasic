@@ -1,10 +1,17 @@
 import { useUpdateUsuario } from './useCtualizar'
 import { useVolver } from '../config'
-import { FaArrowRight, FaEnvelope, FaUser } from 'react-icons/fa'
+import { FaArrowRight, FaEnvelope, FaIcons, FaUser } from 'react-icons/fa'
 
 export const UpdatePerfil = () => {
-  const { email, handleUpdate, setEmail, setUsername, username } =
-    useUpdateUsuario()
+  const {
+    email,
+    handleUpdate,
+    setEmail,
+    setUsername,
+    username,
+    perfil_logo,
+    setPerfilLogo
+  } = useUpdateUsuario()
   const { volver } = useVolver()
   return (
     <div className="login-container">
@@ -39,6 +46,29 @@ export const UpdatePerfil = () => {
               onChange={(e) => setEmail({ email: e.target.value })}
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="Perfil Logo">
+              <FaIcons className="form-icon" />
+              Perfil Logo
+            </label>
+
+            <input
+              type="text"
+              value={perfil_logo?.perfil_logo}
+              onChange={(e) => setPerfilLogo({ perfil_logo: e.target.value })}
+            />
+          </div>
+
+          {perfil_logo && (
+            <div className="image-preview">
+              <img
+                src={perfil_logo.perfil_logo}
+                alt="Vista previa de imagen de perfil"
+              />
+              <span>Vista previa</span>
+            </div>
+          )}
 
           <div className="form-actions">
             <button type="submit" className="btn-primary">

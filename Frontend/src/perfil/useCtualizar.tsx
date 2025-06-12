@@ -4,8 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 export const useUpdateUsuario = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [username, setUsername] = useState<{ username: string } | null>(null)
+  const [username, setUsername] = useState<{ username: string } | null >(null)
   const [email, setEmail] = useState<{ email: string } | null>(null)
+  const [perfil_logo, setPerfilLogo] = useState<{ perfil_logo: string } | null >(null)
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,7 +18,8 @@ export const useUpdateUsuario = () => {
       },
       body: JSON.stringify({
         username: username?.username,
-        email: email?.email
+        email: email?.email,
+        perfil_logo: perfil_logo?.perfil_logo
       })
     })
 
@@ -42,10 +44,11 @@ export const useUpdateUsuario = () => {
       if (res.ok) {
         setUsername({ username: data.data.username })
         setEmail({ email: data.data.email })
+        setPerfilLogo({ perfil_logo: data.data.perfil_logo })
       }
     }
     usuarioUnico()
   }, [id])
 
-  return { username, setUsername, email, setEmail, handleUpdate }
+  return { username, setUsername, email, setEmail, perfil_logo, setPerfilLogo, handleUpdate }
 }
