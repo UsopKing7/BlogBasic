@@ -1,9 +1,7 @@
 import { Router } from 'express'
 import { pool } from '../models/db'
 import { PostsConsulta, UsuarioConsulta } from '../config'
-import {
-  validacionPosts
-} from '../routers/validaciones'
+import { validacionPosts, validacionUpdatePost } from '../routers/validaciones'
 import { rutaProtected } from './login-register'
 
 export const routerPosts = Router()
@@ -156,3 +154,57 @@ routerPosts.delete(
     }
   }
 )
+
+routerPosts.patch('/usuario/update/post/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const vUpdatePost = validacionUpdatePost.parse(req.body)
+
+    const { rows: postExiste } = await pool.query<PostsConsulta>(
+      'SELECT * FROM posts WHERE id = $1',
+      [id]
+    )
+
+    if (postExiste.length === 0) {
+      res.status(404).json({ message: 'post no encontrado' })
+      return
+    }
+
+    await pool.query(
+      'UPDATE posts SET titulo = $1, contenido = $2 WHERE id = $3',
+      [vUpdatePost.titulo, vUpdatePost.contenido, id]
+    )
+
+    res.status(200).json({ message: 'Post actualisado correctamente' })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al actualizar el post',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
+
+routerPosts.get('/usuario/post/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const { rows: postExiste } = await pool.query<PostsConsulta>(
+      'SELECT * FROM posts WHERE id = $1',
+      [id]
+    )
+
+    if (postExiste.length === 0) {
+      res.status(404).json({ message: 'No se encontro el post' })
+      return
+    }
+
+    res.status(200).json({
+      message: 'post encontrado',
+      data: postExiste[0]
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Erro al obtener datos del post',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})

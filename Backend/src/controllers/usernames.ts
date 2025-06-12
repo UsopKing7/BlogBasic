@@ -75,10 +75,11 @@ routerUsername.patch('/usuario/update/:id', rutaProtected, async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE usuarios SET username = $1, email = $2, perfil_logo = $3', [
+      'UPDATE usuarios SET username = $1, email = $2, perfil_logo = $3 WHERE id = $4', [
         vUsuarioUpdate.username,
         vUsuarioUpdate.email,
-        vUsuarioUpdate.perfil_logo
+        vUsuarioUpdate.perfil_logo,
+        id
       ]
     )
 

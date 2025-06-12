@@ -98,3 +98,14 @@ export const validacionPosts = z.object({
     .string()
     .min(3, { message: 'El contenido tiene que ser mayor a 3 caracteres' })
 })
+
+export const validacionUpdatePost = z.object({
+  titulo: z
+    .string()
+    .min(3, { message: 'El nombre debe tener como minimo 3 caracteres' })
+    .optional(),
+  contenido: z
+    .string()
+    .min(3, { message: 'El contenido tiene que ser mayor a 3 caracteres' })
+    .optional()
+})
