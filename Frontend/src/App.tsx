@@ -5,11 +5,12 @@ import { Login } from './login-register/Login'
 import ProtectedRoute from './routers/ProtectedRouter'
 import { Perfil } from './perfil/Perfil'
 import { CrearPost } from './posts/PostsNew'
+import { UpdatePerfil } from './perfil/UpdatePerfil'
 
 export const App = () => {
   return (
     <Routes>
-      <Route path='/' element={<Inicio />} />
+      <Route path="/" element={<Inicio />} />
       <Route path="/:id" element={<Inicio />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
@@ -26,6 +27,14 @@ export const App = () => {
         element={
           <ProtectedRoute>
             <CrearPost />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/perfil/update/:id"
+        element={
+          <ProtectedRoute>
+            <UpdatePerfil />
           </ProtectedRoute>
         }
       />
