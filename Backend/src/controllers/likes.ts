@@ -63,6 +63,52 @@ routerLikes.post(
   }
 )
 
+routerLikes.delete('/usuario/like/:id_usuario/post/:id_post', async (req: Request, res: Response) => {
+  try {
+    const { id_usuario, id_post } = req.params
+
+    const { rows: usuairoExiste } = await pool.query<UsuarioConsulta>(
+      'SELECT * FROM usuarios WHERE id = $1',
+      [id_usuario]
+    )
+
+    if (usuairoExiste.length === 0) {
+      res.status(404).json({ meesage: 'El usuario no existe' })
+      return
+    }
+
+    const { rows: postExiste } = await pool.query<PostsConsulta>(
+      'SELECT * FROM posts WHERE id = $1',
+      [id_post]
+    )
+
+    if (postExiste.length === 0) {
+      res.status(404).json({ message: 'El post no existe' })
+      return
+    }
+
+    const { rows: validarLike } = await pool.query<LikesConsulta>(
+      'SELECT 1 FROM likes WHERE usuario_id = $1 AND post_id = $2',
+      [id_usuario, id_post]
+    )
+
+    if (validarLike.length > 0) {
+      await pool.query(
+        'DELETE FROM likes WHERE usuario_id = $1 AND post_id = $2',
+        [id_usuario, id_post]
+      )
+    }
+
+    res.status(200).json({ message: 'Se elimino el like correctamente' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: 'Error al dar dislike',
+      error: error instanceof Error ? error.message : error
+    })
+  }
+})
+
 routerLikes.get('/likes/post/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
