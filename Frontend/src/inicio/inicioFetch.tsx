@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const usePostsMostrar = () => {
+  // const [contenido, setContenido] = useState<{ contenido: string } | null>(null)
   const { id } = useParams<{ id: string }>()
   const [likesPorPost, setLikesPorPost] = useState<{
     [postId: number]: number
@@ -71,20 +72,48 @@ export const usePostsMostrar = () => {
   }, [posts])
 
   const hadnleDarLike = async (postId: number) => {
-    const res = await fetch(
-      `http://localhost:3333/api/usuario/like/${id}/post/${postId}`,
-      {
-        method: 'POST',
-        credentials: 'include'
-      }
-    )
+    try {
+      const res = await fetch(
+        `http://localhost:3333/api/usuario/like/${id}/post/${postId}`,
+        {
+          method: 'POST',
+          credentials: 'include'
+        }
+      )
 
-    if (res.ok) {
-      console.log('like puestoy')      
-    } else {
-      alert('ya tiene el like puesto no puedes poner otro')
+      if (res.ok) {
+        console.log('like puesto')
+        setLikesPorPost((prev) => ({
+          ...prev,
+          [postId]: (prev[postId] || 0) + 1
+        }))
+      } else {
+        const res = await fetch(
+          `http://localhost:3333/api/usuario/like/${id}/post/${postId}`,
+          {
+            method: 'DELETE',
+            credentials: 'include'
+          }
+        )
+
+        if (res.ok) {
+          console.log('dislike hecho')
+          setLikesPorPost((prev) => ({
+            ...prev,
+            [postId]: Math.max((prev[postId] || 1) - 1, 0)
+          }))
+        }
+      }
+    } catch (error) {
+      console.error('Error en hadnleDarLike:', error)
     }
   }
+
+/*   const hadnleComentario = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const res = await fetch('http://localhost:3333/api')
+  } */
 
   return { posts, likesPorPost, hadnleDarLike }
 }

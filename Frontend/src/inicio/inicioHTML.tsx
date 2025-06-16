@@ -21,8 +21,18 @@ export const Inicio = () => {
     email: string
     perfil_logo: string
   } | null>(null)
+  const [mostrarFormulario, setMostrarFormulario] = useState<{
+    [postId: number]: boolean
+  }>({})
   const { posts, likesPorPost, hadnleDarLike } = usePostsMostrar()
   const [searchQuery, setSearchQuery] = useState('')
+
+  const toggleFormularioComentario = (postId: number) => {
+    setMostrarFormulario((prev) => ({
+      ...prev,
+      [postId]: !prev[postId]
+    }))
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -163,17 +173,30 @@ export const Inicio = () => {
                           aria-label="Dar like"
                           onClick={() => hadnleDarLike(post.id)}
                         >
-                          <FaHeart />
+                          <FaHeart color="red" />
                           <span>{likesPorPost[post.id] ?? 0}</span>
                         </button>
 
                         <button
                           className="action-btn comment-btn"
                           aria-label="Comentar"
+                          onClick={() => toggleFormularioComentario(post.id)}
                         >
-                          <FaRegComment />
+                          <FaRegComment color="blue" />
                           <span>Comentar</span>
                         </button>
+                        {mostrarFormulario[post.id] && (
+                          <form >
+                            <label htmlFor="">comentaio</label>
+                            <textarea 
+                            placeholder='hola'
+ /*                            value={}
+                            onChange={(e) => } */
+                            rows={4}>
+
+                            </textarea>
+                          </form>
+                        )}
                       </div>
                     )}
                   </article>
