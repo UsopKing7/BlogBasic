@@ -88,3 +88,8 @@ export interface LikesConsulta {
   post_id: string
   total_likes: number
 }
+
+// Interface Comentario
+export interface Comentario {
+  contenido: string
+}

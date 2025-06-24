@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const usePostsMostrar = () => {
-  // const [contenido, setContenido] = useState<{ contenido: string } | null>(null)
+  const [contenido, setContenido] = useState<{ contenido: string } | null>(null)
   const { id } = useParams<{ id: string }>()
   const [likesPorPost, setLikesPorPost] = useState<{
     [postId: number]: number
+  }>({})
+    const [comentariosPorPost, setComentariosPorPost] = useState<{
+    [postId: number]: Array<{ id: number; contenido: string; username: string; creado_en: string }>
   }>({})
 
   const [posts, setPosts] = useState<
@@ -109,11 +112,51 @@ export const usePostsMostrar = () => {
     }
   }
 
-/*   const hadnleComentario = async (e: React.FormEvent) => {
+  const hadnleComentario = async (e: React.FormEvent, postId: number) => {
     e.preventDefault()
+    const res = await fetch(`http://localhost:3333/api/${id}/comentario/${postId}`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contenido: contenido?.contenido
+      })
+    })
 
-    const res = await fetch('http://localhost:3333/api')
-  } */
+    const data = await res.json()
+    if (res.ok) {
+      alert('mensaje puesto')
+    } else {
+      alert(data.message)
+    }
+  }
 
-  return { posts, likesPorPost, hadnleDarLike }
+  useEffect(() => {
+    const obtenerComentarios = async () => {
+      const nuevosComentarios: typeof comentariosPorPost = {}
+      for (const post of posts) {
+        try {
+          const res = await fetch(`http://localhost:3333/api/comentarios/${post.id}`)
+          if (res.ok) {
+            const data = await res.json()
+            nuevosComentarios[post.id] = data.data // Ajusta según tu respuesta de la API
+          } else {
+            nuevosComentarios[post.id] = []
+          }
+        } catch {
+          nuevosComentarios[post.id] = []
+        }
+      }
+      setComentariosPorPost(nuevosComentarios)
+    }
+
+    if (posts.length > 0) {
+      obtenerComentarios()
+    }
+  }, [posts])
+
+
+  return { posts, likesPorPost, hadnleDarLike, hadnleComentario, contenido, setContenido, comentariosPorPost }
 }

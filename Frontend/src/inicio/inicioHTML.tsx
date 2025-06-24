@@ -24,7 +24,15 @@ export const Inicio = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState<{
     [postId: number]: boolean
   }>({})
-  const { posts, likesPorPost, hadnleDarLike } = usePostsMostrar()
+  const {
+    posts,
+    likesPorPost,
+    hadnleDarLike,
+    contenido,
+    hadnleComentario,
+    setContenido,
+    comentariosPorPost
+  } = usePostsMostrar()
   const [searchQuery, setSearchQuery] = useState('')
 
   const toggleFormularioComentario = (postId: number) => {
@@ -65,18 +73,18 @@ export const Inicio = () => {
   )
 
   return (
-    <div className="inicio-app">
+    <div className="app-container">
       {/* Header */}
-      <header className="app-header">
-        <div className="header-container">
-          <Link to="/" className="brand-wrapper">
-            <FaCode className="brand-icon" />
-            <h1 className="brand-title">
-              Dev<span className="brand-highlight">Hub</span>
+      <header className="main-header">
+        <div className="header-content">
+          <Link to="/" className="logo-link">
+            <FaCode className="logo-icon" />
+            <h1 className="logo-text">
+              Dev<span className="logo-highlight">Hub</span>
             </h1>
           </Link>
 
-          <div className="search-bar">
+          <div className="search-container">
             <FaSearch className="search-icon" />
             <input
               type="text"
@@ -84,36 +92,37 @@ export const Inicio = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Buscar publicaciones"
+              className="search-input"
             />
           </div>
 
-          <div className="user-actions">
+          <div className="user-nav">
             {isAuthenticated ? (
-              <div className="auth-authenticated">
-                <Link to={`/new-post/${user?.id}`} className="new-post-btn">
+              <div className="user-authenticated">
+                <Link to={`/new-post/${user?.id}`} className="create-post-btn">
                   Crear Post
                 </Link>
-                <Link to={`/perfil/${user?.id}`} className="profile-link">
+                <Link to={`/perfil/${user?.id}`} className="user-profile">
                   {user?.perfil_logo ? (
                     <img
                       src={user.perfil_logo}
                       alt={`Avatar de ${user.usuario}`}
-                      className="user-avatar"
+                      className="profile-image"
                     />
                   ) : (
-                    <div className="avatar-fallback">
+                    <div className="default-avatar">
                       <FaUser />
                     </div>
                   )}
                 </Link>
               </div>
             ) : (
-              <div className="auth-buttons">
-                <Link to="/login" className="auth-btn login-btn">
+              <div className="auth-options">
+                <Link to="/login" className="login-button">
                   <FaSignInAlt />
                   <span>Iniciar sesión</span>
                 </Link>
-                <Link to="/register" className="auth-btn register-btn">
+                <Link to="/register" className="register-button">
                   <FaUserPlus />
                   <span>Regístrate</span>
                 </Link>
@@ -124,14 +133,14 @@ export const Inicio = () => {
       </header>
 
       {/* Main Content */}
-      <main className="app-main">
-        <div className="main-container">
+      <main className="content-area">
+        <div className="content-wrapper">
           {/* Posts Feed */}
-          <section className="posts-feed">
-            <div className="feed-header">
+          <section className="posts-section">
+            <div className="section-header">
               <h2>Publicaciones Recientes</h2>
               {filteredPosts.length > 0 && (
-                <div className="results-count">
+                <div className="results-info">
                   {filteredPosts.length}{' '}
                   {filteredPosts.length === 1 ? 'resultado' : 'resultados'}
                 </div>
@@ -139,92 +148,149 @@ export const Inicio = () => {
             </div>
 
             {filteredPosts.length > 0 ? (
-              <div className="posts-grid">
+              <div className="posts-list">
                 {filteredPosts.map((post, idx) => (
-                  <article key={idx} className="post-card">
+                  <article key={idx} className="post-item">
                     <div className="post-header">
-                      <div className="author-info">
+                      <div className="post-author">
                         <div className="author-avatar">
                           {post.perfil_logo ? (
-                            <img src={post.perfil_logo} />
+                            <img
+                              src={post.perfil_logo}
+                              alt={`Avatar de ${post.username}`}
+                              className="avatar-image"
+                            />
                           ) : (
-                            <FaUser />
+                            <FaUser className="avatar-icon" />
                           )}
                         </div>
-                        <div className="author-details">
+                        <div className="author-info">
                           <h4 className="author-name">
                             {post.username || 'Anónimo'}
                           </h4>
-                          <span className="post-date">
+                          <span className="post-time">
                             {formatearFecha(post.creado_en)}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="post-content">
+                    <div className="post-body">
                       <h3 className="post-title">{post.titulo}</h3>
-                      <p className="post-text">{post.contenido}</p>
+                      <p className="post-content">{post.contenido}</p>
                     </div>
+
                     {isAuthenticated && (
-                      <div className="post-footer">
+                      <div className="post-actions">
                         <button
-                          className="action-btn like-btn"
+                          className={`like-button ${
+                            likesPorPost[post.id] ? 'user-liked' : ''
+                          }`}
                           aria-label="Dar like"
                           onClick={() => hadnleDarLike(post.id)}
                         >
-                          <FaHeart color="red" />
-                          <span>{likesPorPost[post.id] ?? 0}</span>
+                          <span className="like-icon-container">
+                            <FaHeart className="like-icon" />
+                          </span>
+                          <span className="like-count">
+                            {likesPorPost[post.id] ?? 0}
+                          </span>
+                          <span className="like-label">Me gusta</span>
                         </button>
 
                         <button
-                          className="action-btn comment-btn"
+                          className="comment-toggle"
                           aria-label="Comentar"
                           onClick={() => toggleFormularioComentario(post.id)}
                         >
-                          <FaRegComment color="blue" />
-                          <span>Comentar</span>
+                          <span className="comment-icon-container">
+                            <FaRegComment className="comment-icon" />
+                          </span>
+                          <span className="comment-label">Comentar</span>
                         </button>
-                        {mostrarFormulario[post.id] && (
-                          <form >
-                            <label htmlFor="">comentaio</label>
-                            <textarea 
-                            placeholder='hola'
- /*                            value={}
-                            onChange={(e) => } */
-                            rows={4}>
+                      </div>
+                    )}
 
-                            </textarea>
-                          </form>
-                        )}
+                    {/* Nueva sección de comentarios */}
+                    {mostrarFormulario[post.id] && (
+                      <div className="comments-container">
+                        <form
+                          className="comment-form"
+                          onSubmit={(e) => hadnleComentario(e, post.id)}
+                        >
+                          <label
+                            htmlFor={`comment-field-${post.id}`}
+                            className="comment-label"
+                          >
+                            Añadir comentario
+                          </label>
+                          <textarea
+                            id={`comment-field-${post.id}`}
+                            className="comment-input"
+                            placeholder="Escribe tu comentario aquí..."
+                            value={contenido?.contenido}
+                            onChange={(e) =>
+                              setContenido({ contenido: e.target.value })
+                            }
+                            rows={3}
+                          />
+                          <button type="submit" className="submit-comment">
+                            Publicar comentario
+                          </button>
+                        </form>
+
+                        <div className="comments-list">
+                          {comentariosPorPost[post.id]?.length > 0 ? (
+                            comentariosPorPost[post.id].map((comentario) => (
+                              <div key={comentario.id} className="comment-card">
+                                <div className="comment-header">
+                                  <div className="comment-author">
+                                    <span className="commenter-name">
+                                      {comentario.username}
+                                    </span>
+                                    <span className="comment-date">
+                                      {formatearFecha(comentario.creado_en)}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="comment-content">
+                                  <p>{comentario.contenido}</p>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="no-comments-message">
+                              Sé el primero en comentar
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </article>
                 ))}
               </div>
             ) : (
-              <div className="empty-state">
+              <div className="empty-results">
                 <div className="empty-icon">📭</div>
-                <h3>No se encontraron publicaciones</h3>
-                <p>
+                <h3 className="empty-title">No se encontraron publicaciones</h3>
+                <p className="empty-message">
                   {searchQuery
                     ? 'No hay resultados para tu búsqueda. Intenta con otros términos.'
                     : 'Aún no hay publicaciones. Sé el primero en compartir algo.'}
                 </p>
-                {isAuthenticated && (
+                {isAuthenticated ? (
                   <Link
                     to={`/new-post/${user?.id}`}
-                    className="create-post-btn"
+                    className="create-first-post"
                   >
                     Crear mi primer post
                   </Link>
-                )}
-                {!isAuthenticated && (
-                  <div className="auth-prompt">
-                    <Link to="/login" className="auth-btn login-btn">
+                ) : (
+                  <div className="auth-suggestion">
+                    <Link to="/login" className="suggestion-login">
                       Iniciar sesión
                     </Link>
-                    <Link to="/register" className="auth-btn register-btn">
+                    <Link to="/register" className="suggestion-register">
                       Regístrate
                     </Link>
                   </div>
